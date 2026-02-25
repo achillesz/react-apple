@@ -1,0 +1,22 @@
+{
+  "files": [],
+  "compilerOptions": {
+    "allowJs": false,
+    "jsx": "react-jsx",
+    "target": "es2020",
+    "module": "esnext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true
+    // "isolatedModules": true,
+    // "resolveJsonModule": true
+  },
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
