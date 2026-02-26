@@ -13,34 +13,72 @@ const SearchResults = () => {
 
   const [searchResults, setSearchResults] = useState<Product[]>([]); // 假设这是从API获取的搜索结果
 
-  // http://152.136.182.210:12231/api/products?keyword=MacBook
-  async function fetchSearchResults(keyword: string | null, page: number) {
-    // 模拟一个异步请求，实际应用中应调用后端API
-    return await fetch(
-      `http://152.136.182.210:12231/api/products?keyword=${keyword}&page=${page}`,
-    );
-  }
-
-  // 1
   useEffect(() => {
-    const search = async () => {
-      const res = await fetchSearchResults(query, page);
-      const data = await res.json();
-      // 模拟数据请求
-      console.log("搜索结果：", data);
+    // 副作用逻辑
+    const constroller = new AbortController();
+    // 创建一个新的AbortController实例，用于取消请求
+    const signal = constroller.signal;
 
-      setSearchResults(data);
+    fetch(`http://152.136.182.210:12231/api/products?keyword=${query}`, {
+      signal,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("网络响应不是OK");
+        }
+        // 检查响应状态码是否为200
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Fetched data:", data);
+        setSearchResults(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching search results:", error);
+        setSearchResults([]); // 出错时清空结果
+      });
+
+    return () => {
+      // 清理函数
+      console.log("清理函数执行，取消请求");
+      constroller.abort(); // 取消请求
     };
-    search();
-  }, [query, page]);
+  }, [query]); // 依赖数组
+  // 空数组 []：只在组件挂载（mount）时执行一次。
+  // 有依赖：依赖变化时重新执行。
+  // 不写依赖：每次渲染都会执行（不推荐，容易浪费性能）。
+
+  useEffect(() => {
+    console.log("我只行了！！！！");
+    const timer = setInterval(() => {
+      console.log("每隔一秒执行一次的逻辑");
+    }, 1000);
+
+    return () => {
+      // 清理函数
+      console.log("组件卸载时执行的清理逻辑");
+      clearInterval(timer); // 清除定时器
+      console.log("定时器已清除");
+    };
+  }, [query]); // 只在组件挂载时执行一次
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-2xl font-bold mb-4">Search Results</h1>
-      <p className="text-gray-600">
-        搜索关键词
-        {query ? `"${query}"` : "未指定"}
-      </p>
+    <div className="min-h-screen p-8">
+      <div className="max-w-4xl mx-auto mb-12">
+        <input
+          type="text"
+          value={query ?? ""}
+          onChange={(e) => {
+            setSearchParams({ query: e.target.value, page: page.toString() });
+          }}
+          placeholder="输入搜索关键词"
+          className="w-full px-6 py-4 bg-apple-white dark:bg-apple-dark rounded-xl text-lg
+            border border-apple-gray dark:border-apple-dark-gray
+            focus:outline-none focus:ring-1 focus:ring-apple-blue dark:focus:ring-apple
+            transition-all
+          "
+        />
+      </div>
       {searchResults.length > 0 ? (
         <ul>
           {searchResults.map((product) => (
