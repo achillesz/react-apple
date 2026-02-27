@@ -1,0 +1,106 @@
+import { useLoaderData } from "react-router-dom";
+// import { product_list } from "../../assets/data/products";
+import { useNavigate } from "react-router-dom";
+import type { Product, Color, ProductModel, MemorySize } from "@/types/custom";
+import Button from "@/components/Button";
+import { useState, useMemo } from "react";
+import ProductTitle from "./ProductTitle";
+import ProductHero from "./ProductHero";
+import SelectTitle from "./SelectTitle";
+import SelectSquare from "./SelectSquare";
+import SelectCircle from "./SelectCircle";
+import PriceTag from "./PriceTag";
+
+// type ParamsType = {
+//   id: string;
+// };
+
+const PordcutDetail = () => {
+  const [selectedModel, setSelectedModel] = useState<ProductModel>();
+  const [selectedColor, setSelectedColor] = useState<Color>();
+  const [selectedMemorySize, setSelectedMemorySize] = useState<MemorySize>();
+
+  const navigate = useNavigate();
+  const product = useLoaderData<Product>();
+
+  const totalAmount = useMemo(() => {
+    return (
+      (product?.startingPrice ?? 0) +
+      (selectedModel?.price ?? 0) +
+      (selectedMemorySize?.price ?? 0)
+    );
+  }, [product, selectedModel, selectedMemorySize]);
+
+  if (!product) {
+    navigate("/404", { replace: true });
+    return;
+  }
+
+  return (
+    <div className="min-h-screen px-4 lg:px-32 mt-4 mb-40 text-apple-text-light dark:text-apple-text-dark">
+      <ProductTitle
+        name={product.name}
+        startingPrice={product.startingPrice}
+        installment={product.installments}
+      />
+      <div className="flex flex-col lg:flex-row gap-6 mt-12">
+        <ProductHero imageSrc={product.carouselImages[0]} />
+        <div className="flex flex-col items-center justify-center">
+          <div className="w-full">
+            <SelectTitle text1="选择型号" text2="请选择您想要的型号" />
+            <div className="mt-4 space-y-2">
+              {product.models.map((model) => (
+                <SelectSquare
+                  key={model.name}
+                  name={model.name}
+                  spec={model.specification}
+                  price={`RMB ${model.price} 起`}
+                  isSelected={selectedModel?.id === model.id}
+                  onClick={() => setSelectedModel(model)}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="w-full mt-10">
+            <SelectTitle text1="外观" text2="选择你喜欢的颜色" />
+            <div className="flex gap-4 mt-6 ml-6">
+              {product.colors.map((colors) => (
+                <SelectCircle
+                  key={colors}
+                  color={colors}
+                  isSelected={selectedColor === colors}
+                  onClick={() => setSelectedColor(colors)}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="w-full mt-10">
+            <SelectTitle text1="储存容量" text2="你需要多大的空间？" />
+            <div className="mt-4 space-y-2">
+              {product.memorySizes.map((size) => (
+                <SelectSquare
+                  key={size.name}
+                  name={size.name}
+                  price={`RMB ${size.price} 起`}
+                  isSelected={selectedMemorySize?.id === size.id}
+                  onClick={() => setSelectedMemorySize(size)}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <PriceTag
+        modelAmount={selectedModel?.price}
+        colorAmount={selectedColor ? 0 : undefined} // 假设颜色不额外收费
+        sizeAmount={selectedMemorySize?.price}
+        totalaAmount={totalAmount}
+      />
+      <div className="flex justify-end mt-12 mr-8">
+        <Button title="加入购物车" />
+      </div>
+    </div>
+  );
+};
+export default PordcutDetail;
