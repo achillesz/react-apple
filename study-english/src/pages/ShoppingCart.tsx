@@ -1,0 +1,65 @@
+import { useContext, useMemo } from "react";
+import { ShoppingCartContext } from "@/contexts/shoppingCart";
+import { Button, CartItem } from "@/components";
+
+const ShoppingCart = () => {
+  const { cartItems } = useContext(ShoppingCartContext);
+
+  const total = useMemo(
+    () =>
+      cartItems.reduce(
+        (acc, item) =>
+          acc +
+          ((item.modelPrice ?? 0) + (item.memorySizePrice ?? 0)) *
+            (item.qty ?? 0),
+        0,
+      ),
+    [cartItems],
+  );
+
+  const shoppingFee = 150; // 假设运费为0，实际应用中可以根据条件计算
+
+  return (
+    <div
+      className="min-h-screen p-6 pt-30
+        max-w-4xl mx-auto 
+        bg-apple-light dark:bg-apple-dark
+        font-light
+    "
+    >
+      <h2 className="text-4xl">
+        购物车总价 ¥{(total + shoppingFee).toLocaleString()}
+      </h2>
+      {/* 商品列表 */}
+      <div className="mb-6">
+        {cartItems.map((item) => (
+          <CartItem item={item} key={item.productId} />
+        ))}
+      </div>
+      {/* 结算区域 */}
+      <div className="ml-12 pt-2 space-y-4">
+        <div className="grid grid-cols-2 items-center">
+          <p className="text-center">小计: </p>
+          <p className="text-right">RMB {total.toLocaleString()}</p>
+          <p className="text-center">运费: </p>
+          <p className="text-right">RMB {shoppingFee.toLocaleString()}</p>
+        </div>
+        <hr
+          className="ml-8 border-t 
+          border-apple-gray-200 dark:border-apple-gray-800
+        "
+        />
+        <div className="grid grid-cols-2 items-center">
+          <p className="text-center text-2xl">总计: </p>
+          <p className="text-right text-2xl">
+            RMB {(total + shoppingFee).toLocaleString()}
+          </p>
+          <div className="col-span-2 flex justify-end mt-12">
+            <Button title="结账"></Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+export default ShoppingCart;

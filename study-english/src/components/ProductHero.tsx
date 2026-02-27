@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import SkuSelect from "./SkuSelect";
 import { produce } from "immer";
 import type { Product, CartItem } from "@/types/custom";
-import { ShoppingCartContext } from "@/contexts";
+import { ShoppingCartContext } from "@/contexts/shoppingCart";
 
 type ProductHeroProps = {
   product: Product;

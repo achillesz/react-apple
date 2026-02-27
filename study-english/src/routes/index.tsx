@@ -18,6 +18,7 @@ import {
   ProductDetail,
   SearchResults,
   UserCenter,
+  ShoppingCart,
 } from "../pages";
 import UserLayout from "@/layouts/UserLayout";
 
@@ -71,6 +72,11 @@ const router = createBrowserRouter([
       {
         path: "search",
         element: <SearchResults />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "cart",
+        element: <ShoppingCart />,
         errorElement: <ErrorPage />,
       },
       {

@@ -1,5 +1,9 @@
 import Logo from "@/assets/apple.svg?react";
-import { AiOutlineMenu, AiOutlineSearch } from "react-icons/ai";
+import {
+  AiOutlineMenu,
+  AiOutlineSearch,
+  AiOutlineShopping,
+} from "react-icons/ai";
 import { useState, type KeyboardEvent } from "react";
 import DarkToggle from "./DarkToggle";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -70,6 +74,14 @@ function Header() {
           />
         </button>
         <DarkToggle />
+        <button
+          className=""
+          onClick={() => {
+            navigate("/cart");
+          }}
+        >
+          <AiOutlineShopping size={24} />
+        </button>
         <button
           className="md:hidden"
           onClick={() => {
