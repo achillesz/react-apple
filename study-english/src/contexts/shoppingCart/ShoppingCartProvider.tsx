@@ -1,9 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ShoppingCartContext from "./ShoppingCartContext";
 import type { CartItem } from "@/types/custom";
 
 const ShoppingCartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    // 从 localStorage 中加载购物车数据，如果没有则返回空数组
+    const savedCart = localStorage.getItem("cart");
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+    } else {
+      localStorage.removeItem("cart");
+    }
+  }, [cartItems]);
 
   const addToCart = (item: CartItem) => {
     const existingItemIndex = cartItems.findIndex(
@@ -15,7 +27,7 @@ const ShoppingCartProvider = ({ children }: { children: React.ReactNode }) => {
         ...prevItems.slice(0, existingItemIndex),
         {
           ...prevItems[existingItemIndex],
-          quantity: (prevItems[existingItemIndex]?.qty ?? 0) + 1,
+          qty: (prevItems[existingItemIndex]?.qty ?? 0) + 1,
         },
         ...prevItems.slice(existingItemIndex + 1),
       ]);
@@ -36,9 +48,23 @@ const ShoppingCartProvider = ({ children }: { children: React.ReactNode }) => {
     setCartItems([]);
   };
 
+  const updateItem = (index: number, newItem: CartItem) => {
+    setCartItems((prevItems) => {
+      if (index < 0 || index >= prevItems.length) {
+        console.error("Index out of bounds");
+        return prevItems;
+      }
+      return [
+        ...prevItems.slice(0, index),
+        newItem,
+        ...prevItems.slice(index + 1),
+      ];
+    });
+  };
+
   return (
     <ShoppingCartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, clearCart }}
+      value={{ cartItems, addToCart, removeFromCart, clearCart, updateItem }}
     >
       {children}
     </ShoppingCartContext.Provider>

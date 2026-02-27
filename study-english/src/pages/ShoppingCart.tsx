@@ -3,8 +3,8 @@ import { ShoppingCartContext } from "@/contexts/shoppingCart";
 import { Button, CartItem } from "@/components";
 
 const ShoppingCart = () => {
-  const { cartItems } = useContext(ShoppingCartContext);
-
+  const { cartItems, updateItem, removeFromCart } =
+    useContext(ShoppingCartContext);
   const total = useMemo(
     () =>
       cartItems.reduce(
@@ -32,8 +32,16 @@ const ShoppingCart = () => {
       </h2>
       {/* 商品列表 */}
       <div className="mb-6">
-        {cartItems.map((item) => (
-          <CartItem item={item} key={item.productId} />
+        {cartItems.map((item, index) => (
+          <CartItem
+            item={item}
+            key={item.productId}
+            onItemUpdate={(qty) => {
+              const newItem = { ...item, qty };
+              updateItem(index, newItem);
+            }}
+            onItemRemove={() => removeFromCart(index)}
+          />
         ))}
       </div>
       {/* 结算区域 */}

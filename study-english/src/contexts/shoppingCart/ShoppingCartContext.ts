@@ -6,6 +6,7 @@ interface ShoppingCartContextProps {
   addToCart: (item: CartItem) => void;
   removeFromCart: (index: number) => void;
   clearCart: () => void;
+  updateItem: (index: number, newItem: CartItem) => void;
 }
 
 const ShoppingCartContext = createContext<ShoppingCartContextProps>({
@@ -13,6 +14,7 @@ const ShoppingCartContext = createContext<ShoppingCartContextProps>({
   addToCart: () => {},
   removeFromCart: () => {},
   clearCart: () => {},
+  updateItem: () => {},
 });
 
 export default ShoppingCartContext;
