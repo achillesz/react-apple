@@ -1,21 +1,9 @@
-import { useState, useEffect } from "react";
 import ShoppingCartContext from "./ShoppingCartContext";
 import type { CartItem } from "@/types/custom";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 const ShoppingCartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-    // 从 localStorage 中加载购物车数据，如果没有则返回空数组
-    const savedCart = localStorage.getItem("cart");
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
-
-  useEffect(() => {
-    if (cartItems.length > 0) {
-      localStorage.setItem("cart", JSON.stringify(cartItems));
-    } else {
-      localStorage.removeItem("cart");
-    }
-  }, [cartItems]);
+  const [cartItems, setCartItems] = useLocalStorage<CartItem[]>("cart", []);
 
   const addToCart = (item: CartItem) => {
     const existingItemIndex = cartItems.findIndex(

@@ -1,25 +1,31 @@
-import { FiSun } from "react-icons/fi";
-import { FiMoon } from "react-icons/fi";
-import { useState } from "react";
+import { FiMoon, FiSun } from "react-icons/fi";
+import { useEffect, useState } from "react";
 
 function DarkToggle() {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    // 优先读取用户上次的选择
+    const saved = localStorage.getItem("theme");
+    if (saved) return saved === "dark";
+    // 否则跟随系统主题
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
 
   const toggleDark = () => {
-    setIsDark(!isDark);
+    setIsDark((prev) => !prev);
   };
 
-  const root = document.documentElement;
-  if (isDark) {
-    root.classList.add("dark");
-  } else {
-    root.classList.remove("dark");
-  }
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle("dark", isDark);
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }, [isDark]);
 
   return (
     <button
-      className="p-1 bg-gray-200 dark:bg-grey-600 rounded-full
-    hover:bg-gray-300 dark:hover:bg-grey-400 transition-all duration-300
+      type="button"
+      aria-label={isDark ? "切换为浅色模式" : "切换为深色模式"}
+      className="p-1 bg-gray-200 dark:bg-gray-600 rounded-full
+    hover:bg-gray-300 dark:hover:bg-gray-400 transition-all duration-300
     hover:rotate-12
     "
       onClick={toggleDark}

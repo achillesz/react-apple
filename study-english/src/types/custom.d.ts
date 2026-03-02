@@ -100,3 +100,7 @@ export interface Category {
   features: Feature[];
   products: Product[];
 }
+
+export interface SupportData {
+  data: string;
+}
