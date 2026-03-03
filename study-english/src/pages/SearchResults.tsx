@@ -24,7 +24,7 @@ const SearchResults = () => {
   const search = async (signal: AbortSignal) => {
     try {
       const response = await fetch(
-        `http://152.136.182.210:12231/api/products?keyword=${debouncedQuery}`,
+        `/api/products?keyword=${debouncedQuery}`,
         {
           signal,
         },

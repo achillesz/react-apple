@@ -19,6 +19,7 @@ import {
   SearchResults,
   UserCenter,
   ShoppingCart,
+  Category,
 } from "../pages";
 import UserLayout from "@/layouts/UserLayout";
 
@@ -34,6 +35,11 @@ const router = createBrowserRouter([
       {
         index: true, // 默认子路由
         element: <Home />,
+      },
+      {
+        path: "categories/:category",
+        element: <Category />,
+        errorElement: <ErrorPage />,
       },
       { path: "about", element: <About />, errorElement: <ErrorPage /> },
       {
@@ -51,24 +57,24 @@ const router = createBrowserRouter([
           return await loadProducts(productId, request.signal);
         },
       },
-      {
-        path: "computers",
-        element: <Computers />,
-        errorElement: <ErrorPage />,
-      },
-      { path: "ipad", element: <IPad />, errorElement: <ErrorPage /> },
+      // {
+      //   path: "computers",
+      //   element: <Computers />,
+      //   errorElement: <ErrorPage />,
+      // },
+      // { path: "ipad", element: <IPad />, errorElement: <ErrorPage /> },
       {
         path: "entertainment",
         element: <Entertainment />,
         errorElement: <ErrorPage />,
       },
       { path: "support", element: <Support />, errorElement: <ErrorPage /> },
-      {
-        path: "smarthome",
-        element: <SmartHome />,
-        errorElement: <ErrorPage />,
-      },
-      { path: "phones", element: <Phones />, errorElement: <ErrorPage /> },
+      // {
+      //   path: "smarthome",
+      //   element: <SmartHome />,
+      //   errorElement: <ErrorPage />,
+      // },
+      // { path: "phones", element: <Phones />, errorElement: <ErrorPage /> },
       {
         path: "search",
         element: <SearchResults />,

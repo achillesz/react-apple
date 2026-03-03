@@ -22,6 +22,12 @@ export default defineConfig({
   ],
   server: {
     port: 3000,
+    proxy: {
+      "/api": {
+        target: "http://152.136.182.210:12231",
+        changeOrigin: true,
+      },
+    },
   },
   resolve: {
     alias: {
