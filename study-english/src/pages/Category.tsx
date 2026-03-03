@@ -22,9 +22,7 @@ const Category = () => {
     data: productCategory,
     loading,
     error,
-  } = useApiData<CategoryType>(
-    `/api/categories/${category}`,
-  );
+  } = useApiData<CategoryType>(`/api/categories/${category}`);
 
   console.log("Category Data:", productCategory, error);
 

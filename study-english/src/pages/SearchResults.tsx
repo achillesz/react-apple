@@ -23,12 +23,9 @@ const SearchResults = () => {
 
   const search = async (signal: AbortSignal) => {
     try {
-      const response = await fetch(
-        `/api/products?keyword=${debouncedQuery}`,
-        {
-          signal,
-        },
-      );
+      const response = await fetch(`/api/products?keyword=${debouncedQuery}`, {
+        signal,
+      });
       if (!response.ok) {
         throw new Error("网络响应不是OK");
       }
