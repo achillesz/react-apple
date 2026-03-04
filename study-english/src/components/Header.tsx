@@ -4,12 +4,16 @@ import {
   AiOutlineSearch,
   AiOutlineShopping,
 } from "react-icons/ai";
-import { useState, type KeyboardEvent, useContext } from "react";
+
+import { useState, type KeyboardEvent, useContext, useEffect } from "react";
 import DarkToggle from "./DarkToggle";
 import { NavLink, useNavigate } from "react-router-dom";
 import { SHOPPING_PAGES } from "@/assets/data/path.js";
 import { ShoppingCartContext } from "@/contexts/shoppingCart";
 import { AnimatePresence, motion } from "framer-motion";
+import { IoLanguageOutline } from "react-icons/io5";
+import store from "@/redux/store";
+import { lanuageSet, setCulture } from "@/redux/i18nReducer";
 
 function Header() {
   const { cartItems } = useContext(ShoppingCartContext);
@@ -27,6 +31,27 @@ function Header() {
       }
     }
   };
+
+  const [currentLanguage, setCurrentLanguage] = useState(store.getState());
+  console.log("当前语言:", currentLanguage);
+
+  useEffect(() => {
+    const unsubscribe = store.subscribe(() => {
+      setCurrentLanguage(store.getState());
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []); // 仅在组件挂载时订阅 Redux store 的变化
+
+  const handleLanguageChange = () => {
+    const currentIndex = lanuageSet.indexOf(currentLanguage.currentLanguage);
+    const nextIndex = (currentIndex + 1) % lanuageSet.length;
+    const newLanguage = lanuageSet[nextIndex];
+
+    store.dispatch(setCulture(newLanguage));
+  };
+
   return (
     <nav className="flex items-center justify-between sticky px-4 h-16 top-0 z-50 bg-apple-light dark:bg-apple-dark backdrop-blur-xl shadow-md">
       <NavLink to="/" className="text-xl font-bold">
@@ -78,6 +103,9 @@ function Header() {
           />
         </button>
         <DarkToggle />
+        <button onClick={handleLanguageChange}>
+          <IoLanguageOutline size={24} />
+        </button>
         <button onClick={() => navigate("/cart")} className="relative">
           <AiOutlineShopping size={24} />
           <AnimatePresence>

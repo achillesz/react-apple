@@ -16,15 +16,15 @@ const useApiData = <T>(apiUrl: string) => {
       const result: T = await response.json();
       console.log("加载数据:", result);
       setData(result);
+      setLoading(false);
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") {
-        // 组件卸载导致的请求取消，忽略
+        // 请求被取消，不更新任何状态，等下一次 fetch 处理
         return;
       }
       console.error("加载数据失败:", error);
       setError(error instanceof Error ? error.message : "加载数据失败");
       setData(null);
-    } finally {
       setLoading(false);
     }
   };

@@ -1,11 +1,13 @@
 import { useParams } from "react-router-dom";
-import useApiData from "@/hooks/useApiData";
+// import useApiData from "@/hooks/useApiData";
 import type { Category as CategoryType } from "@/types/custom";
 import { Skeleton } from "@/components/Skeleton";
 import VideoHero from "@/components/VideoHero";
 import TextHeader from "@/components/TextHeader";
 import ImageSlider from "@/components/ImageSlider";
 import CompareTable from "@/components/CompareTable";
+
+import useApiWithReducer from "@/hooks/useApiWithReducer";
 
 type CategoryParams = {
   category: string;
@@ -22,11 +24,11 @@ const Category = () => {
     data: productCategory,
     loading,
     error,
-  } = useApiData<CategoryType>(`/api/categories/${category}`);
+  } = useApiWithReducer<CategoryType>(`/api/categories/${category}`);
 
   console.log("Category Data:", productCategory, error);
 
-  if (loading) {
+  if (loading || !productCategory) {
     return <Skeleton />;
   }
 
