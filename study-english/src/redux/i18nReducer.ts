@@ -1,6 +1,6 @@
 export const lanuageSet = ["zh-CN", "en-US", "zh-TW", "fr-FR"] as const;
 
-type CultureCode = (typeof lanuageSet)[number];
+export type CultureCode = (typeof lanuageSet)[number];
 
 export const setCulture = (cultureCode: CultureCode) => ({
   type: "SET_CULTURE" as const,

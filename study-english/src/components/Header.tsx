@@ -5,16 +5,23 @@ import {
   AiOutlineShopping,
 } from "react-icons/ai";
 
-import { useState, type KeyboardEvent, useContext, useEffect } from "react";
+import {
+  useState,
+  type KeyboardEvent,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import DarkToggle from "./DarkToggle";
 import { NavLink, useNavigate } from "react-router-dom";
 import { SHOPPING_PAGES } from "@/assets/data/path.js";
 import { ShoppingCartContext } from "@/contexts/shoppingCart";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoLanguageOutline } from "react-icons/io5";
-import store from "@/redux/store";
-import { lanuageSet, setCulture } from "@/redux/i18nReducer";
+import { type RootState } from "@/redux/store";
+import { lanuageSet, setCulture, type CultureCode } from "@/redux/i18nReducer";
 import { useTranslation } from "react-i18next";
+import { useSelector, useDispatch } from "react-redux";
 
 function Header() {
   const { cartItems } = useContext(ShoppingCartContext);
@@ -34,24 +41,40 @@ function Header() {
   };
 
   const { t } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(store.getState());
+  // const [currentLanguage, setCurrentLanguage] = useState(store.getState());
+  const currentLanguage = useSelector<RootState, CultureCode>(
+    (state) => state.currentLanguage,
+  );
+
+  const dispatch = useDispatch();
+
   console.log("当前语言:", currentLanguage);
 
+  // useEffect(() => {
+  //   const unsubscribe = store.subscribe(() => {
+  //     setCurrentLanguage(store.getState());
+  //   });
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, []); // 仅在组件挂载时订阅 Redux store 的变化
+
+  // HTMLInputElement | null
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  // ref
   useEffect(() => {
-    const unsubscribe = store.subscribe(() => {
-      setCurrentLanguage(store.getState());
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, []); // 仅在组件挂载时订阅 Redux store 的变化
+    console.log("inputRef.current:", inputRef.current);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isSearchOpen]);
 
   const handleLanguageChange = () => {
-    const currentIndex = lanuageSet.indexOf(currentLanguage.currentLanguage);
+    const currentIndex = lanuageSet.indexOf(currentLanguage);
     const nextIndex = (currentIndex + 1) % lanuageSet.length;
     const newLanguage = lanuageSet[nextIndex];
 
-    store.dispatch(setCulture(newLanguage));
+    dispatch(setCulture(newLanguage));
   };
 
   return (
@@ -79,6 +102,7 @@ function Header() {
       {isSearchOpen && (
         <div className="relative mr-2">
           <input
+            ref={inputRef}
             type="text"
             className="peer border border-gray-300 rounded-lg px-4 py-2 width-64 focus:outline-none focus:ring-2 focus:ring-apple-blue transition duration-300"
             value={query}
