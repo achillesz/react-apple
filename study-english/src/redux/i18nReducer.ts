@@ -1,10 +1,4 @@
-export const lanuageSet = [
-  "zh-CN",
-  "en-US",
-  "es-ES",
-  "zh-TW",
-  "fr-FR",
-] as const;
+export const lanuageSet = ["zh-CN", "en-US", "zh-TW", "fr-FR"] as const;
 
 type CultureCode = (typeof lanuageSet)[number];
 

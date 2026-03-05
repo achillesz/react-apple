@@ -14,6 +14,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { IoLanguageOutline } from "react-icons/io5";
 import store from "@/redux/store";
 import { lanuageSet, setCulture } from "@/redux/i18nReducer";
+import { useTranslation } from "react-i18next";
 
 function Header() {
   const { cartItems } = useContext(ShoppingCartContext);
@@ -32,6 +33,7 @@ function Header() {
     }
   };
 
+  const { t } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(store.getState());
   console.log("当前语言:", currentLanguage);
 
@@ -70,12 +72,12 @@ function Header() {
               `hover:text-apple-blue  ${isActive ? "text-apple-blue font-extrabold" : "text-apple-text-light dark:text-apple-text-dark"}`
             }
           >
-            {page.title}
+            {t(`routes.${page.id}`)}
           </NavLink>
         ))}
       </div>
       {isSearchOpen && (
-        <div className="relative">
+        <div className="relative mr-2">
           <input
             type="text"
             className="peer border border-gray-300 rounded-lg px-4 py-2 width-64 focus:outline-none focus:ring-2 focus:ring-apple-blue transition duration-300"
@@ -84,12 +86,12 @@ function Header() {
             onKeyDown={handleKeyDown}
           />
           <label
-            className="absolute  left-4 top-2 peer-focus:-top-2 peer-focus:text-sm peer-focus:text-apple-blue
+            className="absolute left-2 top-2 peer-focus:-top-2 peer-focus:text-xs peer-focus:text-apple-blue
             transition
             text-apple-text-light
             dark:text-apple-text-dark transition-all duration-300 pointer-events-none"
           >
-            搜索...
+            {t("header.search")}
           </label>
         </div>
       )}
@@ -155,7 +157,7 @@ function Header() {
               }
               onClick={() => setIsMenuOpen(false)}
             >
-              {page.title}
+              {t(`routes.${page.id}`)}
             </NavLink>
           ))}
         </div>
