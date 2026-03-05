@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./main.css";
 import App from "./App";
 import "./redux/store";
+import "./i18n/config";
 
 const rootElement = document.getElementById("root");
 
