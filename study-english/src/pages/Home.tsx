@@ -10,6 +10,8 @@ import withBanner from "@/hocs/withBanner";
 import ImageHero from "@/components/ImageHero";
 import ProductHero from "@/components/ProductHero";
 import { SUGGESTED_PROUDCT } from "@/assets/data/index.js";
+import { useTranslation } from "react-i18next";
+
 const NewArrivalWithSoldOutCheck = withSoldOut<NewArrivalProps>((props) => {
   const { title } = props;
   return <NewArrival {...props} title={"商品：" + title} />;
@@ -21,6 +23,7 @@ const OfferWithSoldOutCheck = withSoldOut<OfferProps>((props) => (
 
 const NewArrivalWithBanner = withBanner(NewArrivalWithSoldOutCheck, "手慢无");
 const Home = () => {
+  const { t } = useTranslation();
   return (
     <div>
       <ImageHero />
@@ -28,7 +31,10 @@ const Home = () => {
         product={SUGGESTED_PROUDCT.product}
         imageUrl={SUGGESTED_PROUDCT.imageSrc}
       />
-      <ProductList title={"上新品"} datalength={NEW_ARRIVALS_LIST.length}>
+      <ProductList
+        title={t("home_page.newarrivals")}
+        datalength={NEW_ARRIVALS_LIST.length}
+      >
         {NEW_ARRIVALS_LIST.map((product) => (
           <NewArrivalWithBanner
             key={product.title}
@@ -38,7 +44,7 @@ const Home = () => {
           />
         ))}
       </ProductList>
-      <ProductList title={"限时折扣"} datalength={OFFER_LIST.length}>
+      <ProductList title={t("home_page.offers")} datalength={OFFER_LIST.length}>
         {OFFER_LIST.map((product) => (
           <OfferWithSoldOutCheck
             key={product.title}

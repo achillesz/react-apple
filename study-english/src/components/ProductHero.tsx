@@ -3,6 +3,7 @@ import SkuSelect from "./SkuSelect";
 import { produce } from "immer";
 import type { Product, CartItem } from "@/types/custom";
 import { ShoppingCartContext } from "@/contexts/shoppingCart";
+import { useTranslation } from "react-i18next";
 
 type ProductHeroProps = {
   product: Product;
@@ -10,6 +11,7 @@ type ProductHeroProps = {
 };
 
 function ProductHero({ product, imageUrl }: ProductHeroProps) {
+  const { t } = useTranslation();
   // const [selectedModel, setSelectedModel] = useState<string>("");
   // const [selectedColor, setSelectedColor] = useState<string>("");
   // const [selectedMemorySize, setSelectedMemorySize] = useState<string>("");
@@ -45,11 +47,11 @@ function ProductHero({ product, imageUrl }: ProductHeroProps) {
       !cartItem.modelId ||
       !cartItem.memorySizeId
     ) {
-      alert("请先选择型号、颜色和储存容量");
+      // alert(t("product_hero.product_hero.select_model_color_memory"));
       return;
     }
     addToCart(cartItem);
-    console.log("已加入购物车:", cartItem);
+    // console.log("已加入购物车:", cartItem);
   };
 
   return (
@@ -66,7 +68,7 @@ function ProductHero({ product, imageUrl }: ProductHeroProps) {
       </div>
       <div className="flex-1 space-y-6 ml-6 md:ml-24">
         <div className="text-4xl font-black md:text-6xl">
-          购买 {product.name}
+          {t("home_page.image_hero.buy")} {product.name}
         </div>
         <div className="font-medium md:text-xl">
           RMB {Number(product.startingPrice).toLocaleString("en-US")}
@@ -89,13 +91,13 @@ function ProductHero({ product, imageUrl }: ProductHeroProps) {
                 );
               }
             }}
-            placeholder={"型号"}
+            placeholder={t("home_page.product_hero.model")}
             options={product.models.map((model) => model.name)}
           />
           <SkuSelect
             value={cartItem.color}
             onChange={(color) => setcartItem(updatecartItem({ color }))}
-            placeholder={"颜色"}
+            placeholder={t("home_page.product_hero.color")}
             options={product.colors}
           />
           <SkuSelect
@@ -115,7 +117,7 @@ function ProductHero({ product, imageUrl }: ProductHeroProps) {
                 );
               }
             }}
-            placeholder={"储存容量"}
+            placeholder={t("home_page.product_hero.memory")}
             options={product.memorySizes.map((size) => size.name)}
           />
           <button
@@ -132,7 +134,7 @@ function ProductHero({ product, imageUrl }: ProductHeroProps) {
               handleAddToCart();
             }}
           >
-            加入购物车
+            {t("home_page.product_hero.add_cart")}
           </button>
         </div>
       </div>

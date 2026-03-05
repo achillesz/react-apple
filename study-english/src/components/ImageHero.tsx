@@ -5,9 +5,11 @@ import IconButton from "./IconButton";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { MdOutlineNavigateNext } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const ImageHero = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   return (
     <div className="relative bg-black-500 text-white mb-2">
       <img
@@ -21,18 +23,20 @@ const ImageHero = () => {
         className="w-full h-[480px] object-cover hidden md:block"
       />
       <div className="absolute inset-4 flex flex-col p-2 items-center justify-end text-center md:justify-start ">
-        <div className="text-4xl md:text-6xl font-bold">iphone 14 Pro</div>
+        <div className="text-4xl md:text-6xl font-bold">
+          {t("home_page.image_hero.product_name")}
+        </div>
         <div className="mt-4 flex space-x-4">
           <IconButton
             variant="primary"
-            title="了解更多"
+            title={t("home_page.image_hero.learn_more")}
             icon={<MdOutlineNavigateNext />}
             iconPosition="right"
             onClick={() => navigate("/product-detail/12")}
           ></IconButton>
           <IconButton
             variant="outline"
-            title="购买"
+            title={t("home_page.image_hero.buy")}
             icon={<AiOutlineShoppingCart />}
             iconPosition="right"
           ></IconButton>
