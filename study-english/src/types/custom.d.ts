@@ -62,6 +62,7 @@ export interface CartItem {
   memorySize: string | null;
   memorySizePrice: number | null;
   qty: number | null;
+  price?: number | null;
 }
 
 export interface SupportData {
