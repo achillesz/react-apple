@@ -19,8 +19,9 @@ import { ShoppingCartContext } from "@/contexts/shoppingCart";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoLanguageOutline } from "react-icons/io5";
 import { type RootState } from "@/redux/store";
-import { lanuageSet, setCulture, type CultureCode } from "@/redux/i18nReducer";
+import { lanuageSet, type CultureCode } from "@/redux/i18nReducer";
 import { useTranslation } from "react-i18next";
+import { setCulture } from "@/redux/i18nSlice"; // 从切片中导入 action
 import { useSelector, useDispatch } from "react-redux";
 
 function Header() {
@@ -43,7 +44,7 @@ function Header() {
   const { t } = useTranslation();
   // const [currentLanguage, setCurrentLanguage] = useState(store.getState());
   const currentLanguage = useSelector<RootState, CultureCode>(
-    (state) => state.currentLanguage,
+    (state) => state.i18n.currentLanguage,
   );
 
   const dispatch = useDispatch();
