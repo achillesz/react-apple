@@ -1,24 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import useApiData from "@/hooks/useApiData";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState, StoreDispatch } from "@/redux/store";
+import { login } from "@/redux/userSlice";
 
 function SignIn() {
+  const dispatch = useDispatch<StoreDispatch>();
+  const { token, loading, error } = useSelector(
+    (state: RootState) => state.user,
+  );
+
+  // const { data, loading, error, fetchData } = useApiData(
+  //   "http://152.136.182.210:12231/api/auth/login",
+  //   {
+  //     method: "POST",
+  //     autoFetch: false,
+  //   },
+  // );
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  const handleLogin = (e: React.FormEvent) => {
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const redirectPath = location.state?.from || "/";
-    localStorage.setItem("token", "fake-jwt-token");
-    navigate(redirectPath, { replace: true });
-    // 模拟登录验证
-    // if (email === "user@example.com" && password === "password") {
-    //   navigate("/");
-    // } else {
-    //   alert("登录失败，请检查您的邮箱和密码。");
-    // }
+
+    dispatch(login({ username: email, password }));
   };
 
+  useEffect(() => {
+    if (loading) return;
+    if (!loading && error) alert(error);
+    if (!loading && token) {
+      localStorage.setItem("token", token);
+
+      const redirectPath = location.state?.from || "/";
+      navigate(redirectPath, { replace: true });
+    }
+  }, [loading, error, token]);
+  // 模拟登录验证
+  // if (email === "user@example.com" && password === "password") {
+  //   navigate("/");
+  // } else {
+  //   alert("登录失败，请检查您的邮箱和密码。");
+  // }
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-800 to-gray-900 flex items-center justify-center p-4">
       <div className="relative w-full max-w-md">

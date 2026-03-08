@@ -23,8 +23,14 @@ import { lanuageSet, type CultureCode } from "@/redux/i18nReducer";
 import { useTranslation } from "react-i18next";
 import { setCulture } from "@/redux/i18nSlice"; // 从切片中导入 action
 import { useSelector, useDispatch } from "react-redux";
+import { AUTH_PAGES } from "../assets/data/path";
+import { parseJwt } from "@/helpers/jwtHelper";
+import { logout } from "@/redux/userSlice";
 
 function Header() {
+  const [username, setUsername] = useState<string | null>(null);
+  const { token } = useSelector((state: RootState) => state.user);
+
   const { cartItems } = useContext(ShoppingCartContext);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -78,6 +84,23 @@ function Header() {
     dispatch(setCulture(newLanguage));
   };
 
+  useEffect(() => {
+    if (token) {
+      // 解析token
+      const decode = parseJwt(token);
+      console.log("decode jwt: ", decode);
+      if (decode && decode.name) {
+        setUsername(decode.name);
+      }
+    }
+  }, [token]);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    setUsername(null);
+    navigate("/auth/signin");
+  };
+
   return (
     <nav className="flex items-center justify-between sticky px-4 h-16 top-0 z-50 bg-apple-light dark:bg-apple-dark backdrop-blur-xl shadow-md">
       <NavLink to="/" className="text-xl font-bold">
@@ -120,7 +143,7 @@ function Header() {
           </label>
         </div>
       )}
-      <div className="gap-2 text-apple-text-light dark:text-apple-text-dark space-x-2">
+      <div className="gap-2 flex items-center text-apple-text-light dark:text-apple-text-dark space-x-2">
         <button>
           <AiOutlineSearch
             size={24}
@@ -155,6 +178,31 @@ function Header() {
             )}
           </AnimatePresence>
         </button>
+
+        {username ? (
+          <>
+            <span>{username}</span>
+            <button className="hover: text-apple-blue" onClick={handleLogout}>
+              登出
+            </button>
+          </>
+        ) : (
+          AUTH_PAGES.map((page) => (
+            <NavLink
+              key={page.id}
+              to={page.path}
+              className={({ isActive }) =>
+                `hover:text-apple-blue hidden md:block ${
+                  isActive
+                    ? "text-apple-blue font-extrabold"
+                    : "text-apple-text dark:text-apple-text-dark"
+                }`
+              }
+            >
+              {page.title}
+            </NavLink>
+          ))
+        )}
         <button
           className="md:hidden"
           onClick={() => {
@@ -185,6 +233,31 @@ function Header() {
               {t(`routes.${page.id}`)}
             </NavLink>
           ))}
+          <hr className="border-t border-gray-300" />
+          {username ? (
+            <>
+              <span>{username}</span>
+              <button className="hover: text-apple-blue" onClick={handleLogout}>
+                登出
+              </button>
+            </>
+          ) : (
+            AUTH_PAGES.map((page) => (
+              <NavLink
+                key={page.id}
+                to={page.path}
+                className={({ isActive }) =>
+                  `hover:text-apple-blue ${
+                    isActive
+                      ? "text-apple-blue font-extrabold"
+                      : "text-apple-text dark:text-apple-text-dark"
+                  }`
+                }
+              >
+                {page.title}
+              </NavLink>
+            ))
+          )}
         </div>
         {isMenuOpen && (
           <div
